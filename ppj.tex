@@ -1,0 +1,890 @@
+\documentclass{memoir}
+
+%% encoding *********************
+\usepackage{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+%% ******************************
+
+\usepackage[thmmarks,framed]{ntheorem}			% Paket za podrsku za rad sa teoremama
+\usepackage{framed}					% Omogucava da se teorema stavi u okvir
+\usepackage{graphicx}					% Podrska za rad sa grafikom
+\usepackage{amssymb,amsmath}				% Podrska za rad sa matematickim simbolima
+\usepackage{listings}					% Podrska za rad sa programskim kodovima
+\usepackage{color}					% Podrska za rad sa bojama
+\usepackage[unicode]{hyperref}				% Za referensiranje u tekstu
+\hypersetup{colorlinks,citecolor=green,filecolor=green,linkcolor=blue,urlcolor=blue}
+
+% LISTINGS *****************************************************************************************
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+\definecolor{lightpurple}{rgb}{0.8,0.8,1}
+
+\lstset{language=C,
+basicstyle=\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=10pt,
+frame=single,
+backgroundcolor=\color{lightpurple},
+tabsize=2,
+showspaces=false,
+showstringspaces=false}
+% LISTINGS *****************************************************************************************
+
+% ***********************************************************************************************************
+% **************************** NASLOVNA STRANA **************************************************************
+\title{\huge{\textsc{Prevodjenje programskih jezika}\\ \normalsize{}}}
+\date{}
+\author{}
+%% RENAME ZA CHAPTER; PART; FIGURE; SECTION
+\def\figurename{Slika}
+
+\chapterstyle{veelo}
+
+    % ******************************************************************************************************************
+    % *****************************************************************************************************************
+    \begin{document} % ***********************************************************************************************
+    % ***************************************************************************************************************
+    % **************************************************************************************************************
+\clearpage\maketitle
+\thispagestyle{empty}
+\vspace{10 mm}
+\begin{center}
+$$
+T(n) = aT(\frac{n}{b}) + c n^k
+$$
+
+$$
+T(n) =
+  \begin{cases}
+   \Theta(n ^{\log _b a})  & \text{ako je } a > b^k \\
+   \Theta(n^k \log n)    & \text{ako je } a = b^k \\
+   \Theta(n^k)			 & \text{ako je } a < b^k \\
+  \end{cases}
+$$
+\end{center}
+
+\vspace{40 mm}
+\begin{center}
+ \textsc{\LARGE{Nemanja Mićović\\}} 
+ \vspace{10 mm}
+ \textsc{Matematički fakultet} \\
+ \textsc{Oktobar 2015}
+\end{center}
+
+
+
+\newpage
+\setcounter{page}{1}
+\renewcommand\chaptername{Poglavlje}	% Preimenovanje poglavlja
+\renewcommand\contentsname{Sadržaj}	% Preimenovanje sadržaja
+\renewcommand\partname{Deo}
+\renewcommand{\bibname}{Bibliografija}
+\renewcommand{\abstractname}{Zdravo svete!}
+
+
+% \emph{Ovaj tekst nastao je kao moje lične beleške sa predavanja Algoritmi i Strukture podataka koje je držao prof. Miodrag Živković. Sa jedne strane, trudio sam se da pratim gradivo koje je obrađeno na predavanjima i da 
+% ovaj tekst ostane i drugim studentima koji budu slušali isti kurs, ali sam takođe nešto drugačije organizovao poglavlja i dodao i novog sadržaja u želji da ova skripta ne bude jednostavno prekucano predavanje.\\
+% Ovom prilikom želim da izrazim punu zahvalnost profesoru Predragu Janičiću od koga sam izuzetno mnogo naucio o svetu programiranja.  Njegova predavanja, visoka očekivanja i odlično organizovano gradivo su zaista 
+% slika i prilika toga kako jedan ozbiljan fakultetski kurs treba da se izvede. Želim i da mu se zahvalim na uvodu u \LaTeX, kao i savetima kojima mi je pomogao da unapredim svoje znanje.\\
+% \begin{flushright}
+% Nemanja Mićović
+% \end{flushright}}
+
+
+%% TEOREME
+\newframedtheorem{definicija}{Definicija}[section]
+\newframedtheorem{teorema}{Teorema}[section]
+\newframedtheorem{tvrdjenje}{Tvrđenje}[section]
+\newframedtheorem{lema}{Lema}[section]
+\newframedtheorem{posledica}{Posledica}[section]
+\newtheorem{dokaz}{Dokaz}[section]
+\newtheorem{primer}{Primer}[section]
+
+\pagestyle{ruled}
+
+\tableofcontents
+\newpage
+
+\begin{abstract}
+\emph{Tekst pred vama je delo studenata smera Informatika sa Matematičkog fakulteta. Zahvaljujemo se puno profesoru 
+Predragu Janičiću i profesoru Miodragu Živkoviću koju su nam svojim predavanjima i savetima  umnogome pomogli da 
+sastavimo dati tekst.\\}
+
+\emph{Tekst je izrađen u \LaTeX - u, a ukoliko vas interesuje sam \LaTeX, savetujemo da pogledate \cite{janicicLatex}. 
+Implementacije algoritama su date u programskom jeziku C, a C je izabran iz činjenice da je to programski jezik koji se 
+najčešće radi kada se uče osnove programiranja našim školskim ustanovama.\\}
+
+\emph{Smatramo da kod, bio pseudo ili pravi, treba da bude intuitivno jasan već na prvi pogled, a ne da sadrži veliku 
+količinu slova koja označavaju razne pojmove i da korisnik provede trećinu svoga vremena samo u pokušaju da razume šta 
+označava šta. Samim tim, trudili smo se da naše implementacije, kodovi i zapisi rešenja budu izuzetno jednostavni i da 
+korisniku što pre predstave rešenja. Rešenja mnogih algoritama koje budemo dali mogu se dodatno optimizovati, ali 
+proces optimizacije algoritama nije tema kojom ćemo se baviti u ovom tekstu. Naš glavni cilj jeste da da rešenja budu 
+tačna, jasna i asimptotski u traženim okvirima.\\}
+
+\emph{Ukoliko imate bilo kakve sugestije ili pitanja, možete nas kontaktirati na algoritmiNLN@gmail.com.\\}
+
+\begin{flushright}
+\emph{Autori}
+\end{flushright}
+\end{abstract}
+
+% \begin{abstract}
+% \emph{Ovaj tekst nastao je kao moje lične beleške sa predavanja Algoritmi i Strukture podataka koje je držao prof. Miodrag Živković na Matematičkom fakultetu. Sa jedne strane, trudio sam se da pratim gradivo koje je obrađeno na predavanjima i da 
+% ovaj tekst ostane i drugim studentima koji budu pohađali isti kurs, ali sam takođe nešto drugačije organizovao poglavlja i dodao i novog sadržaja u želji da ova skripta ima određeni sopstveni identitet.}
+% 
+% \emph{Ovom prilikom želim da izrazim veliku zahvalnost profesoru Predragu Janičiću od koga sam izuzetno mnogo naucio o svetu programiranja.  Njegova predavanja, visoka očekivanja i odlično organizovano gradivo su zaista 
+% slika i prilika toga kako jedan ozbiljan fakultetski kurs treba da se izvede. Želim i da mu se zahvalim na tome što me je motivisao da naučim \LaTeX, kao i savetima kojima mi je pomogao da unapredim svoje znanje.\\}
+% \begin{flushright}
+% \emph{Nemanja Mićović}
+% \end{flushright}
+% \end{abstract}
+
+% ******************************************************************************************************************************
+\chapter{Elementi teorije formalnih jezika}
+\emph{U narednom poglavlju, dajemo progled osnovnih pojmova u toeriji formalnih jezika. Razjasnicemo pojmove kao sto su jezik, azbuka, regularni jezik i slicno.}
+\newpage
+% ******************************************************************************************************************************
+
+\section{Azbuka i jezik}
+
+\begin{definicija}
+    Azbuka (alfabet), u oznaci $\sum$, je konacan skup simbola koje nazivamo karakteri.
+\end{definicija}
+
+\begin{primer}
+ $\sum = \{a, b, c \}$ je jedna azbuka.
+\end{primer}
+
+\begin{definicija}
+ Rec (niska) je bilo kakav konacan niz karaktera azbuke.
+\end{definicija}
+
+\begin{primer}
+Neka je data azbuka: $\sum = \{a, b, c \}$. \\
+x = ab $\in \sum$ \\
+y = abcaabc $\in \sum$ \\
+\end{primer}
+
+\begin{definicija}
+ Skup svih reci nad azbukom $\sum$, u oznaci $\sum^*$, definisemo kao skup koji sadrzi sve moguce
+ reci koje se mogu konstruisati nad azbukom $\sum$. 
+\end{definicija}
+
+Sa $\epsilon$ cemo oznacavati praznu rec.
+
+\begin{primer}
+ Neka je data azbuka $\sum = \{a\}$. \\
+ Tada je skup $\sum^* = \{\epsilon, a, aa, aaa, aaaa, ... \}$.\\
+ Primetimo da ce skup $\sum^*$ biti beskonacan u opstem slucaju.
+\end{primer}
+
+\begin{definicija}
+ Skup L $\subseteq \sum^*$ nazivamo jezik.
+\end{definicija}
+
+\begin{primer}
+ $L_1 = \{a, ba, bba, bbba, bbbba, ... \}$ \\
+ Primetimo da $L_1$ mozemo i zapisati kao $L_1 = \{b^ka \ | \ k \ge 0 \}$. \\
+ Obrnuto, neka je dat jezik $L_2 = \{ a^nb^n \ | \ n > 0\}$ \\
+ Tada vazi $L_2 = \{ab, aabb, aaabbb, ... \}$.
+\end{primer}
+
+Ono sto je kljucni problem kojim cemo se baviti na dalje, jeste problem \textsc{ispitivanja pripadnosti reci jeziku}. 
+
+\section{Operacije nad jezicima i recima}
+\subsection{Operacije nad recima}
+Uvedimo prvu operaciju - konkatenacija, odnosno spajanje reci. Cesto se srece operator $.$ koji vrsi konkatenaciju reci\footnote{Programski jezik PHP koristi operator $.$ 
+kao operator konkatenacije stringova.}. Takodje, koristicemo i operator $\cdot$ za oznacavanje uvedenog operatora.
+
+\begin{teorema}
+ Algebarska struktura $(\sum^*, \cdot)$ je monoid.
+\end{teorema}
+\begin{dokaz}
+ Neka su x, y, z $\in \sum^*$ neke reci azbuke $\sum$.\\
+ Znamo da $\exists \epsilon \in \sum^* $ iz cega sledi da $ x \cdot \epsilon = \epsilon \cdot x = x $ cime je pokazano svojstvo neutrala u odnosu na $\cdot$. \\
+ Neka je $x \cdot y = w \rightarrow w \in \sum^*$ jer je $\sum^*$ skup svih reci nad azbukom $\sum$. \\
+ I konacno, pokazimo svojstvo asocijativnosti nad recima x, y, z. No to je ocigledno jer: \\
+ $(x \cdot y)\cdot z = x \cdot (y \cdot z)$ te je zaista $(\sum^*, \cdot)$ monoid.
+\end{dokaz}
+
+Primetimo da $(\sum^*, \cdot)$ nije komutativan jer u opstem slucaju $ab \not= ba$, ako su ab i ba reci iz $\sum^*$.
+
+\subsection{Operacije nad jezicima}
+Primetimo da smo jezik definisali kao skup odakle prirodno slede skupovne operacije. Time dajemo sledecu definiciju.
+
+\begin{definicija}
+ Neka su dati jezici $L, L_1, L_2 \subseteq \sum^*$. Skupovne operacije $\cup, \cap,  \backslash  $ i $\ ^c$ definisemo kao:
+ \begin{itemize}
+  \item $L_1 \cup L_2 := \{x \ | \ x \in L_1 \vee x \in L_2 \}$
+  \item $L_1 \cap L_2 := \{x \ | \ x \in L_1 \wedge x \in L_2 \}$
+  \item $L_1 \backslash L_2 := \{x \ | \ x \in L_1 \wedge \notin L_2 \}$
+  \item $L^c := \sum^* \backslash L$
+  \item $L_1 \times L_2 := \{(x, y) \ | \ x \in L_1, y \in L_2 \}$
+  \item $L_1 \cdot L_2 := \{x \cdot y \ | \ x \in L_1 \wedge y \in L_2 \}$
+ \end{itemize}
+\end{definicija}
+
+$L_1 \cdot L_2$ cemo nazivati \emph{proizvod jezika}. Primetimo i sledece: 
+$$ L^0 = \{ \epsilon \} $$
+$$ L^n = L \cdot L^{n-1} = \prod_{i = 1}^{n} L_i $$ \\ 
+Da li vazi asocijativnost? \\
+$$ L^3  = L \cdot \Big(L \cdot \big(L \cdot \{\epsilon\} \big) \Big) $$
+$$ L^3 = \Big( \big(\{ \epsilon \} \cdot L \big) \cdot L \Big) \cdot L $$
+Cime smo problem sveli na problem rasporedjivanja zagrada, a za to naravno vazi asocijativnost.
+$$ \Longrightarrow L \cdot L^{n-1} = L^{n-1} \cdot L $$
+
+% \begin{figure}[h!]
+% 	\begin{center}
+% 		\includegraphics[scale=0.5]{dijagrami/algoritam}
+% 	\end{center}
+% 	\caption{Konceptualni prikaz algoritma}
+% 	\label{fig:algoritam}
+% \end{figure}
+
+\begin{primer}
+ $ \{ab, b\}^3 = \{ab, b\}\{ab, b\}^2 $ \\
+ $ \{ab, b\}^3 = \{ab, b\}\{abab, abb, bab, bb\} $ \\
+ $ \{ab, b\}^3 = \{ababab, ababb, abbab, abbb, babab, babb, bbab, bbb \} $ \\
+\end{primer}
+
+Primetimo da smo od 2 reci na 3. stepen dosli do skupa kardinalnosti 8. Postavlja se pitanje da li u opstem slucaju je $|L_1 \cdot L_2| = |L_1| \cdot |L_2| $ ? 
+
+\begin{primer}
+ $ \{ab, a\} \cdot \{b, \epsilon\} = \{abb, ab, a\} $ \\
+ $ |\{abb, ab, a\}| = 3 \not= 4 \Longrightarrow |L_1 \cdot L_2| \not= |L_1| \cdot |L_2| $
+\end{primer}
+
+
+
+% \begin{lstlisting}
+% Algoritam primerPseudoKoda(arg 1, arg 2, ..., arg k)
+% Ulaz: Ulaz1, Ulaz2, ..., Izlazn n
+% Izlaz: Izlaz1, Izlaz 2, ..., Izlaz m
+% begin:
+% 	i := 0;
+% 	while i < n do
+% 		i := i + 1;
+% 		x := x + y;
+% 		y := y + y;
+% 	for i:=0 to n do
+% 		x := x + y;
+% 		y := y + y;
+% 	{Ovo je jedan komentar}
+% 	if a[x] = y then x := y;
+% 	else x := 2 * x;
+% end
+% \end{lstlisting}
+
+
+% ******************************************************************************************************************************
+\chapter{Matematička indukcija}
+\emph{U ovom poglavlju upoznaćemo se sa jednim od moćnih matematičkih alata za dokazivanje tvrđenja. Indukcija ima ogromnu primenu
+u svetu matematike i može se iskoristi za veliki broj dokaza, pogotovo rekurzivnih funkcija u 
+računarstvu.\marginpar{Spojiti sa poglavljem SLOZENOST ALGORITAMA}}
+\newpage
+% ******************************************************************************************************************************
+
+
+% ******************************************************************************************************************************
+\chapter{Složenost algoritama}
+\emph{Upoznaćemo se sa notacijama O, $\varOmega$ i $\varTheta$ kojima ćemo izražavati složenost algoritama. Pokazaćemo tehnike za
+određivanje složenosti raznih algoritama i daćemo prikaz i osnovne informacije i klasa složenosti.\marginpar{Spojiti 
+sa poglavljem MATEMATICKA INDUKCIJA}}
+\newpage
+% ******************************************************************************************************************************
+Kao što često u životu postoji više tačnih odgovora na dato pitanje, tako u svetu programiranja postoji više mogućih rešenja za predstavljeni problem. Upravo u tome i jeste
+lepota programiranja i glavni argument ljudi koji veruju da je programiranje umetnost. Činjenica da programer može da izrazi svoju kreativnost kroz tekst i da ukoliko se potrudi
+uvek taj tekst napiše drugačije, samom programiranju daje na jedinstvenosti i lepoti. I kada razmislimo malo bolje o tome, činjenica da ljudi danas masovno koriste softver,
+svakako češće nego što čitaju knjige, gledaju filmove i slike, koji su opšte prihvaćeni vidovi umetnosti, govori o tome koliko je danas programiranje bitno i svuda oko nas.
+Ono što možda ostaje nedorečeno, jeste na primer, da prosečan korisnik pametnog telefona zapravo i ne zna kako uopšte njegov telefon funkcioniše i ko to uopšte pravi, što svakako
+daje umnogome različit odgovor od toga ko kreira filmove, slike i knjige. 
+
+Algoritmi 
+
+% ******************************************************************************************************************************
+\chapter{Elementarne strukture podataka}
+\emph{U ovom poglavlju razjasnićemo pojmove poput: lista, heš tablela, stablo, stek, red i slično, i dati uvod u 
+osnovne i najčešće
+fundamentalne strukture podataka. Takođe, daćemo i algoritme koji implementiraju osnovne naredbe koje određene strukture
+podataka imaju.}
+\newpage
+% ******************************************************************************************************************************
+\marginpar{NAPOMENA}
+\textsc{Ovo poglavlje bi trebalo da pomene stabla, ali se stabla obradjuju u poglavlju koje se bavi grafovima.}
+
+% ********************************
+\section{Osnovne strukture podataka}
+% ********************************
+
+% ********************************
+\section{Povezane liste}
+% ********************************
+\subsection{Jednostruko povezane liste}
+\subsection{Dvostruko povezane liste}
+\subsection{Kružne liste}
+
+
+% ********************************
+\section{Stek}
+% ********************************
+Stek (eng. stack) je struktura podataka koja je zasnovana na principu LIFO - Last in first out. To jest, poslednji 
+element koji je dodat na stek se prvi skida sa steka.
+Stek ima sledeće osnovne naredbe:
+\begin{itemize}
+	\item Push - gurni element na vrh steka
+	\item Pop - skini element sa vrha steka
+	\item Top - pogledaj šta je na vrhu steka
+\end{itemize}
+
+Stek se može realizovati na više načina, a najčešće je to preko niza i povezanih lista. Objektni programski jezici često 
+imaju sistemsku klasu za rad sa stekom. 
+
+Primer steka na računaru je sistemski stek na koji se stavljaju pozivi funkcija i tako dalje. Greška \emph{stack overflow} je greška prekoračenja steka, to jest,
+	 greška koja se javlja kada se pokuša naredba \emph{push} a stek je pun, ili naredba \emph{pop}, a stek je 
+prazan.
+
+Za rad sa stekom potrebno je čuvati podatak o vrhu steka i paziti na ograničenje elemenata kako se ne bi došlo do 
+pomenute greške \emph{stack overflow}. 
+
+Složenost naredbi:
+\begin{itemize}
+ \item Push - O(1)
+ \item Pop - O(1)
+ \item Top - O(1)
+\end{itemize}
+
+Naredba steka su konstante složenosti jer mi u svakom trenutku znamo gde je vrh steka, tako da u konstatnom vremenu 
+možemo da izvršimo potrebnu operaciju.
+
+
+% ********************************
+\section{Red}
+% ********************************
+Red (eng. queue) je struktura podatak zasnovana na principu FIFO - First in first out. To jest, prvi element koji je 
+dodat se i prvi skida. Najlakše je zamisliti red i realnog života, na primer red ljudi koji čeka kod doktora. Doktor 
+prima osobu koje je prva u redu, to jest, osobu koja je prva došla. Čovek koji poslednji dođe, ide na kraj reda.
+
+Red ima sledeće osnovne naredbe:
+\begin{itemize}
+ \item Add - dodaj element na kraj reda
+ \item Remove - skini element sa početka reda
+\end{itemize}
+
+Obe operacije su složenosti O(1) jer se u svakom trenutku čuvaju podaci o tome gde se nalazi početak reda, a gde kraj 
+reda.
+
+\subsection{Implementacija reda pomoću dva steka}
+Ako su nam data dva steka $S_1$ i $S_2$ možemo od njih napraviti red $Q$. Ideja je....
+
+% ********************************
+\section{Heš tabela}
+% ********************************
+Heš tabele su struktura podataka koja se najčešće koristi za skladištenje određenih informacija kojima često pristupamo 
+i gde nam je potrebno da im pristupimo u vrlo kratkom vremenskom intervalu. To se postiže takozvanim heširanjem (eng. 
+hashing) koje se vrši tako što se element $x$ koji se smešta u heš tabelu šalje kao argument funkciji koja vrši 
+heširanje $h(x)$.
+
+Najveći problem sa heš tabelama jeste izabrati odgovarjuću heš funkciju koja će da elemente što ravnopravnije 
+distribuira kroz tabelu, to jest da minimizira \emph{kolizije}.
+
+Kolizije su slučaj kada se desi da je pozicija $i$ u tabeli $H$ zauzeta, te je potrebno odabrati način na koji će se 
+pronaći pozicija $j$ na koje će se smestiti element $x$.
+
+Dobrim odabirom heš funkcije, može se dobiti složenost O(1) za operacije heš tabele. 
+
+Operacije heš tabele su:
+\begin{itemize}
+ \item Add - dodaj element u heš
+ \item Remove - ukloni element iz heša (ukoliko postoji)
+ \item Find - pronađi element u hešu (ukoliko postoji)
+\end{itemize}
+
+U idealnom slučaju su ove operacije složenosti O(1) ukoliko heš funkcija izbegava kolizije. Praktično, to je skoro 
+nemoguće te uvek težimo da heš funkcija prouzrokuje što manje kolizija. 
+
+Ne postoji direktan odgovor na pitanje \emph{Kako kreirati dobru heš funkciju} jer njen odabir zavisi od razloga zbog 
+kojega se koristi heš tabela.
+
+Generalno je praksa da ukoliko je popunjenost heš tabele oko 70$\%$ treba prošiti heš.
+
+
+
+\subsection{Lančanje}
+\subsection{Nizanje}
+\subsection{Duplo heširanje}
+
+% ******************************************************************************************************************************
+\chapter{Sortiranje}
+\emph{Sortiranje se jako često vrši u svetu programiranja, a postoji veliki broj algoritama za sortiranje. U ovom poglavlje daćemo 
+neke najpoznatije, analiziraćemo njihovu složenost i efikasnost, dokazati korektnost, a takođe ćemo dati i njihovu implementaciju
+u pseudo kodu, ali i u programskom jeziku C.}
+\newpage
+% ******************************************************************************************************************************
+
+\section{Sortiranje umetanjem - Insertion sort}
+
+\section{Sortiranje izborom - Selection Sort}
+
+\section{Sortiranje objedinjavanjem - Merge Sort}
+Priču o prvom divide and conquer algoritmu počećemo na nešto drugačiji način.
+
+Pretpostavimo da imamo n vojnika, a da neprijateljski vojskovođa ima m vojnika, pri čemu važi da je m > n, to jest, neprijateljske vojske je više, i važi da nema povlačenja iz bitke. 
+Ukoliko bi naš vojskovođa napao odjednom m vojnika kojih je više, imao bi mnogo veće gubitke, i vrlo verovatno bi svi izginuli. Sa druge strane, ukoliko je naš vojskovođa izuzetno dobar taktičar, a njegova vojska
+izuzetno utrenirana i iskusna, deljenjem neprijateljskih m vojnika na podvojske, naš vojskovođa bi bio u stanju da čak i brojčano nadjača neprijatelja i porazi svih m vojnika u kranjem ishodu.
+
+Upravo se ovde krije ideja divide and conquer algoritama kojima pripada sortiranje objedinjavanjem. Delimo dati niz na dva podniza jednake (ili za 1 različite) dužine, rekuzivno ih sortiramo, a potom
+ih spajamo u jedan sortirani niz. 
+
+Pseudo kod algoritma:
+\begin{lstlisting}
+Algoritam: MergeSort(A, p, r)
+Ulaz: A, p, r
+Izlaz: A (sortiran)
+BEGIN
+	if(p < r)
+		q = (p + r) / 2 // zaokruzujemo na manji
+		MergeSort(a, p, q);
+		MergeSort(a, q + 1, r)
+		Merge(a, p, q, r);
+END
+\end{lstlisting}
+
+Pri čemu algoritam koji vrši objedinjavanje ima sledeći pseudo kod:
+\begin{lstlisting}
+Algoritam: Merge(A, p, q, r)
+Ulaz: A, p, q, r
+Pomocno: X, Y // pomocni nizovi
+Izlaz: A(objedinjen deo od A[p]...A[q] i A[q+1]...A[r])
+BEGIN
+	// kopira deo A[p]..A[q] u X[0]...X[q - p + 1]
+	// n je duzina niza X
+	n = KreirajNiz(A, X, p, q, r);  
+	// kopira deo A[q+1]...A[r] u Y[0]...[r - q]
+	// m je duzina niza Y
+	m = KreirajNiz(A, Y, p, q, r);
+	i := 0
+	j := 0
+	k := 0
+	while k < n + m do
+		if i = n
+			for i = j to m
+				A[k] = Y[i]
+		else if j == m
+			for j = i to n
+				A[k] = X[j]
+		else if X[i] < Y[j]
+			A[k] = X[i]
+			i := i + 1
+		else 
+			A[k] := Y[j]
+			j := j + 1
+		k := k + 1
+END
+\end{lstlisting}
+
+Implementacija u C-u:
+\begin{lstlisting}
+void mergeSort(int *a, int p, int r)
+{
+	int q;
+	if(p < r){
+		q = (p + r) / 2; // racunamo sredinu
+		mergeSort(a, p, q); 
+		mergeSort(a, q + 1, r);
+		merge(a, p, q, r);
+	}
+}
+\end{lstlisting}
+
+\subsection{Dokaz}
+\subsection{Analiza složenosti}
+
+\section{Brzo sortiranje - Quick Sort}
+Mnogi tvrde daje Quick sort algoritam najkorišćeniji na svetu. 
+
+ovde malo istorijat
+
+ovde sada kako ide algoritam kroz tekst
+
+Dalje sledi implementacija algoritma u programskom jeziku C. Savetuje se kreiranje omotača kako bi korisnik funkcije 
+oslobodio brige o tome koje granice niza da prosledi.
+\begin{lstlisting}
+void quickSort(int *a, int n)
+{
+	quickSort_(a, 0, n-1);
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+void quickSort_(int *a, int levo, int desno)
+{
+	int pivot;
+	if(levo < desno){
+		pivot = particionisanje(a, levo, desno);
+		quickSort_(a, levo, pivot - 1);
+		quickSort_(a, pivot + 1, desno);
+	}
+}
+\end{lstlisting}
+
+Najteži deo algoritma, korak particionisanja se može uraditi na više načina. Jedna konkretna implementacija data je u 
+delu teksta koji sledi.
+
+\begin{lstlisting}
+int particionisanje(int *a, int p, int q)
+{
+	int pivot, levo, desno;
+	pivot = a[p]; // biramo prvi element za pivota
+	levo = p + 1; // levo indikator na pocetku (posle pivota)
+	desno = q; // desni indikator na kraju niza
+	
+	while(levo <= desno){
+		while(a[levo] <= pivot && levo <= q)
+			levo++;
+		while(a[desno] > pivot && desno > p)
+			desno--;
+		if(levo < desno)
+			razmeni(a, levo, desno);
+	}
+/*Pivot je na pocetku niza, a  
+ostatak je poredjan tako da je na poziciji
+'desno' element koji je manji od pivota
+i on je poslednji takav u nizu, te ga menjamo sa pivotom */
+	razmeni(a, p, desno);
+	return desno;
+}
+\end{lstlisting}
+
+Naredna implementacija particionisanja radi na sledeći način:
+\begin{itemize}
+ \item Za pivota biramo prvi element u nizu (linija 4)
+ \item Indeksi $i$ i $j$ kreću od prvom narednog elementa (linije 5,6)
+ \item Indeks $j$ ide do kraja niza (linija 6)
+ \item Indeks $i$ će označavati najbliži veći element od pivota
+ \item Kada se pronađe manji element od pivota, vrši se razmena i pomera $i$ (linije 8,9,10,11)
+ \item Nakon petlje, treba još postaviti pivota na svoju poziciju, pri čemu znamo da $ a[i-1] < a[p] $ (linija 14)
+\end{itemize}
+
+\begin{lstlisting}
+int Particionisanje(int *a, int levo, int desno)
+{
+	int i, j, p;
+	p = a[levo];
+	i = levo + 1;
+	for(j = levo + 1; j <= desno; j++)
+	{
+		if(a[j] < p)
+		{
+			swap(a, i, j);
+			i++;
+		}
+	}
+	swap(a, levo, i - 1);
+	return i - 1;
+}
+\end{lstlisting}
+
+Dacemo i iterativnu implementaciju.
+
+\subsection{Dokaz}
+\begin{tvrdjenje}
+ Algoritam QuickSort uspešno sortira niz dužine n.
+\end{tvrdjenje}
+
+\begin{dokaz}
+Dokaz izvodimo potpunom indukcijom po dužini niza n.
+
+\textbf{Baza}: Niz dužine 1 je sortiran te poziv QuickSort(a, 1) uspešno sortira niz.
+
+\textbf{Induktiva hipoteza}:
+Pretpostavimo da algoritam QuickSort uspešno sortira niz dužine k, gde je $ k < n $.
+
+Podsetimo se koraka particionisanja. Particionasanje bira pivota na zadati način i nakon završetka particionisanja važi da je pivot na poziciji p,
+levo od njega su elementi niz manji od pivota, a desno od njega elementi niza veći od pivota. Takođe, pivot je na svojoj poziciji.
+Neka su dva dobijena podniza levo i desno od pivota, dužine $ k_1 $ i $ k_2 $, respektivno. Tada važi da je $ k_1, k_2 < n $. Štaviše, važi i $ k_1 + k_2 < n 
+$ jer je ukupna dužine $ n-1 $ (jer ne računamo pivota).
+
+\textbf{Induktivni korak}:
+Odnosno, algoritam QuickSort se poziva dva puta za nizove dužine $ k_1 $ i $ k_2 $, a po induktivnoj hipotezi algoritam QuickSort uspešno sortira nizove dužine 
+manje od n. 
+\end{dokaz}
+
+\subsection{Analiza složenosti}
+Prikazaćemo najbolji i najgori slučaj, a potom dati jasnu diferencnu jednačinu algoritma.
+
+\subparagraph{Najgori slučaj:}  Najgori slučaj za algoritam predstavlja situacija kada je niz sortiran rastuće, a za pivota se uzima prvi element u nizu. Tada 
+je složenost $ O(n^2) $. Nakon dobijanja pozicije pivota i rekurzivnih poziva, dimenzija problema se smanjila samo za 1, odnosno n puta rešavamo problem čija 
+se dimenzija smanjuje samo za 1.
+
+\subparagraph{Složenost najbolje slučaja:} Ako pretpostavimo da ćemo uvek pivot izabrati idealno, odnosno tako da on deli niz $n$ na 2 podniza dužine $n/2$, 
+tada 
+diferencna jednačina odgovara algoritmu MergeSort, odnosno:
+$$ T(n) = 2T(n/2) + O(n) $$
+
+Što po Master teoremi daje složenost $ O(n \log{n}) $
+
+\subparagraph{Prosečna složenost}
+Verovatnoća da se pivot u nizu dužine $n$ nalazi na poziciji $i$ je $ 1/n $. Broj poređenja je $(n-1)$.
+
+$$ T(n) = (n - 1) + \frac{1}{n} \sum \limits_{i=1}^{n} (T(i - 1) + T(n - i)) $$
+
+% \mathcal 	T(n) = \frac{1}{n} \sum \limits_{i=1}^{n} (T(i - 1) + T(n - i)) + (n - 1) \\
+% 		& = \frac{1}{n} (T(0) + T(1) + T(2) + ... + T(n-2) + T(n-1)) + (T(n-1) + T(n-2) + ... + T(1) + T(0)) + (n-1) \\
+
+\begin{align*}
+T(n)	&= (n - 1) + \frac{1}{n} \sum \limits_{i=1}^{n} (T(i - 1) + T(n - i))\\
+T(n)	&= (n - 1) + \frac{1}{n} (T(0) + T(1) + ... + T(n-1)) + (T(n-1) + T(n-2) + ... + T(0)) \\
+T(n)  &= (n - 1) + \frac{2}{n} \sum \limits_{i=1}^{n-1} T(i)	\qquad / n \\
+n T(n) &= n(n-1) + 2 \sum \limits_{i=1}^{n-1} T(i)
+\end{align*}
+Potom se doda jos jedna jednačina za $n+1$ a onda vršimo oduzimanje:
+\begin{align*}
+(n+1) T(n+1) &= (n+1)n + 2 \sum \limits_{i=1}^{n} T(i) \\
+n T(n) &= n(n-1) + 2 \sum \limits_{i=1}^{n-1} T(i)
+\end{align*}
+
+Potom se vrši oduzimanje:
+\begin{align*}
+(n+1)T(n+1) - nT(n) &= 2T(n) + 2n	\\
+(n+1)T(n+1) - (n+2)T(n) &= 2n \qquad / \frac{1}{(n+1)(n+2)}	\\
+\frac{T(n+1)}{n+2} - \frac{T(n)}{n+1} &= \frac{2n}{(n+1)(n+2)}
+\end{align*}
+
+Uzmimo:
+\begin{align*}
+t_{n+1} &= \frac{T(n+1)}{n+2} \\
+t_n &= \frac{T(n)}{n+1}
+\end{align*}
+Preći ćemo na indeks i radi slobode korišćenja $n$ kao gornje granice za sumu kasnije:
+\begin{align*}
+t_{i+1} + t_i &= \frac{2i}{(i+1)(i+2)} \qquad / \sum \limits_{i=1}^{n-1}	\\
+t_2 - t_1 + t_3 - t_2 + ... + t_n - t_{n-1} &= \sum \limits_{i=1}^{n-1} \frac{2i}{(i+1)(i+2)}	\\
+t_n - t_1 &= \sum \limits_{i=1}^{n-1} \frac{2i}{(i+1)(i+2)} 
+\end{align*}
+% **************************************************************************************************************
+\chapter{Numerički algoritmi}
+\emph{Prikazaćemo osnovne i najčešće korišćene numeričke algoritme. Izračunavanje vrednosti polinoma u tački,
+aproksimacija nula funkcije, brzo stepenovanje, Karacuba množenje i tako dalje.}
+\newpage
+% **************************************************************************************************************
+
+% **************************************************************************************************************
+\chapter{Grafovski algoritmi}
+\emph{U ovom poglavlju ćemo se upoznati sa tim šta je graf, gde, zašto i kako se koristi. Prikazaćemo najosnovnije 
+algoritme potrebne za rad sa grafovima i prikazaćemo kako se graf može reprezentovati u računaru. Za kraj, prikazaćemo 
+i konkretnu implementaciju u programskoj jeziku C.}
+\newpage
+% **************************************************************************************************************
+
+% ********************************
+\section{Osnovno o grafu}
+% ********************************
+\begin{definicija}
+ Graf $ G=(V,E) $ je uređeni par koji sadrži skup čvorova V, i skup grana E.
+ Grana e $\in$ E je definisana sa tačno dva čvora $ v_1, v_2 \in V $.
+\end{definicija}
+
+Grafovi su posebna tema za sebe, i ukoliko vas interesuje više o njima, možete pogledati knjige \cite{diskretna_anderson} i \cite{diskretna_srb}.
+% ********************************
+\section{Kako reprezentovati graf u računaru?}
+% ********************************
+
+\subsection{Matrica susedstva}
+\subsection{Liste povezanosti}
+
+% ********************************
+\section{Obilasci grafa}
+% ********************************
+
+% ******************************************************************************************************
+\chapter{Geometrijski algoritmi}
+% ******************************************************************************************************
+\emph{U ovom delu, daćemo elementarne geometrijske algoritme koji se danas često koriste. Aproksimacije Bezijerove krive, 
+rastojanje tačke od prave i slično. Neke od njih daćemo u pseudo kodu sa obzirom na to da C nije najpogodniji programski
+za bilo kakvu grafiku, dok ćemo deo algoritama zasnovanih na analitici prikazai u C-u.}
+\newpage
+
+% **************************************************************************************************************
+\chapter{Stabla}
+\emph{Stabla predstavljaju jedan od najčešće korišćenih struktura podataka i pomoću stabala se mogu opisati raznorazni 
+problemi i pojmovi. Zapis matematičkog izraza, rekuzivno stablo, stablo pretrage, poredbeno stablo, stablo za 
+ilustraciju backtrack-inga, i tako dalje.}
+\newpage
+% **************************************************************************************************************
+
+% ********************************
+\section{Obilasci stabla}
+% ********************************
+Obilaski stabla se generalno dele u 4 grupe:
+\begin{itemize}
+ \item Prefiksni - KLD
+ \item Infiksni - LKD
+ \item Postfiksni - LDK
+ \item Po nivoima
+\end{itemize}
+
+\begin{description}
+ \item Prefiksni obilazak (eng. preorder, Node-Left-Right NRL) predstavlja obilazak u kome se prvo obilazi
+	čvor stabla, potom levo podstablo, a nakon toga desno podstablo.
+ \item Infiksni obilazak (eng. inorder, Left-Node-Right LNR) predstavlja obilazak u kome se prvo posećuje levo
+	podstablo, potom koren, a nakon toga desno podstablo.
+ \item Postfiksni obilazak (eng. postorder, Left-Right-Node LRN) je obilazak u kome se prvo posećuju levo i desno 
+	podstablo, a potom koren.
+ \item Obilazak po nivoima je obilazak stabla u kojem se obilazi prvi nivo na kome je koren, potom nivo ispod korena sa 
+	leva na desno, i tako sve do kraja stabla, to jest, poslednjeg nivoa.
+\end{description}
+
+\subsection{Prefiksni obilazak stabla - KLD}
+\begin{lstlisting}
+Algoritam: KLD
+Ulaz: cvor (koren stabla)
+Izlaz: izlazna sekvenca preorder obilaska
+BEGIN
+	print(cvor)
+	KLD(cvor.levo)
+	KLD(cvor.desno)
+END
+\end{lstlisting}
+
+\subsection{Infiksni obilazak stabla - LKD}
+\begin{lstlisting}
+Algoritam: LKD
+Ulaz: cvor (koren stabla)
+Izlaz: izlazna sekvenca preorder obilaska
+BEGIN
+	KLD(cvor.levo)
+	print(cvor)
+	KLD(cvor.desno)
+END
+\end{lstlisting}
+
+\subsection{Postfiksni obilazak stabla - LDK}
+\begin{lstlisting}
+Algoritam: LDK
+Ulaz: cvor (koren stabla)
+Izlaz: izlazna sekvenca preorder obilaska
+BEGIN
+	LDK(cvor.levo)
+	LDK(cvor.desno)
+	print(cvor)
+END
+\end{lstlisting}
+
+\subsection{Nerekurzivni obilasci stasbla}
+
+\subsubsection{Preorder (KLD) obilazak stabla}
+Kako bismo uklonili rekurziju, biće potrebno korišćenje pomoćnog steka.
+Ideja je da na steku držimo sinove čvora koji ćemo prethodno skinuti i ispisati.
+Pseudo kod je sledeći:
+\begin{lstlisting}
+Algoritam: KLD
+Ulaz: cvor, stek
+Izlaz: izlazna sekvenca preorder obilaska
+BEGIN
+	push(cvor);
+	while(!prazan(stek)){
+		x = pop(stek);
+		print(x);
+		if(x.desno != NULL)
+			push(x.desno);
+		if(x.levo != NULL)
+			push(x.levo);
+	}
+END
+\end{lstlisting}
+
+% **************************************************************************************************************
+\chapter{Algoritamske strategije}
+\emph{Algoritamskih strategija je mnogo, a u ovom poglavlju ćemo pokriti one najpoznatije i ilustrovati ih kroz 
+primere. Razjasnićemo pojmove kao što su \emph{backtrack}, \emph{divide and conquer}, \emph{brute force}, i tako dalje.}
+\newpage
+% **************************************************************************************************************
+
+% ********************************
+\section{Osnovne algoritamske strategije}
+% ********************************
+
+% ********************************
+\section{Pohlepni algoritmi}
+% ********************************
+
+% ********************************
+\section{Divide and Conquer algoritmi}
+% ********************************
+
+% ********************************
+\section{Backtracking}
+% ********************************
+
+% ********************************
+\section{Brute force}
+% ********************************
+
+% **************************************************************************************************************
+\chapter{Razni zadaci}
+\emph{U ovom poglavlju se nalaze raznorazni zadaci koji obuhvataju tekst koje se nalazi pred vama. Nema smisla baviti 
+se algoritmima ukoliko se oni ne implementiraju kroz programski jezik jer se nekad mogu javiti raznorazni problemi 
+kojih tek kasnije postajemo svesni.}
+\newpage
+% **************************************************************************************************************
+
+% ** BIBLIOGRAFIJA **************************************************************
+% *******************************************************************************
+\begin{thebibliography}{9}
+\bibitem{janicicLatex}
+  Predrag Janičić, Aleksandar Samardžić i Goran Nenadić,
+  \emph{\LaTeXe za autore}.
+  Kompjuter biblioteka,
+  2003.
+
+\bibitem{diskretna_anderson}
+  James Anderson,
+  \emph{Discrete Mathematics with Combinatorics}
+  Second Edition, 
+  2003.
+
+\bibitem{diskretna_srb}
+  D. Stevanović, M. Ćirić, S. Simić, V. Baltić,
+  \emph{Diskretna Matematika - Osnovi kombinatorike i teorije grafova}
+  Društvo matematičara Srbije,
+  2008.
+
+\bibitem{janicicP1}
+  Predrag Janičić i Filip Marić,
+  \emph{Osnove programiranja kroz programski jezik C}.
+  Matematički fakultet,
+  2014.
+
+\bibitem{janicicP2}
+  Predrag Janičić i Filip Marić,
+  \emph{Osnove programiranja kroz programski jezik C - Deo II}.
+  Matematički fakultet,
+  2014.
+\bibitem{ezivkoAlg}
+  Predrag Živković,
+  \emph{Algoritmi}.
+  Matematički fakultet,
+  2000.
+\bibitem{CRLS}
+  Thomash H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein
+  \emph{Introduction to Algorithms}.
+  The MIT press, III edition.
+ \bibitem{specSoft}
+  R. D. Tennent 
+  \emph{Specifzing Software}.
+  Cambridge University Press, 2002. 
+\end{thebibliography}
+% *******************************************************************************
+% *******************************************************************************
+
+\end{document}
